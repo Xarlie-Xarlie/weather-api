@@ -7,6 +7,8 @@ defmodule WeatherWeb.Router do
 
   scope "/api", WeatherWeb do
     pipe_through :api
+
+    get "/weather", WeatherController, :show
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
