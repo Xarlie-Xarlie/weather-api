@@ -3,8 +3,9 @@ defmodule Weather do
   Entry point for weather-related operations.
 
   This module serves as an abstraction layer that interacts with the orchestrator
-  to fetch weather data for predefined locations. It hides the underlying implementation
-  details from the caller, providing a clean and simple interface.
+  to fetch weather data for predefined locations or custom locations. It hides 
+  the underlying implementation details from the caller, providing a clean and 
+  simple interface.
   """
 
   alias Weather.Orchestrator
@@ -17,10 +18,13 @@ defmodule Weather do
   ]
 
   @doc """
-  Fetches weather data for predefined locations.
+  Fetches weather data for predefined or custom locations.
 
-  This function delegates the request to the orchestrator, which handles the
-  concurrent fetching of weather data for all locations.
+  ## Parameters
+    - `opts`: A keyword list of options:
+      - `:locations` - A list of custom location maps to fetch weather data for.
+        Each map should have `:location`, `:latitude`, and `:longitude` keys.
+      - `:timeout` - The timeout in milliseconds (default: 10,000).
 
   ## Returns
     - `{:ok, results}`: A tuple containing the weather data for all locations.
@@ -28,10 +32,13 @@ defmodule Weather do
   """
   @spec call(keyword()) :: {:ok, list()} | {:error, any()}
   def call(opts \\ []) do
-    Logger.info("Starting weather data request")
+    locations = Keyword.get(opts, :locations, @locations)
+    timeout = Keyword.get(opts, :timeout, 10_000)
+
+    Logger.info("Starting weather data request for #{length(locations)} locations")
     start_time = System.monotonic_time(:millisecond)
 
-    result = Orchestrator.start_request(@locations, opts)
+    result = Orchestrator.start_request(locations, timeout: timeout)
 
     end_time = System.monotonic_time(:millisecond)
     Logger.info("Weather data request completed in #{end_time - start_time}ms")

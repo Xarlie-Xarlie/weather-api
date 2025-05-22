@@ -9,6 +9,7 @@ defmodule WeatherWeb.Router do
     pipe_through :api
 
     get "/weather", WeatherController, :show
+    post "/weather/custom", WeatherController, :custom
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
