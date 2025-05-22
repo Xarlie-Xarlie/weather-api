@@ -40,12 +40,34 @@ defmodule WeatherWeb.WeatherControllerTest do
 
     conn = get(conn, "/api/weather")
 
-    assert json_response(conn, 200) ==
-             [
-               "Parameter 'latitude' and 'longitude' must have the same number of elements",
-               "Parameter 'latitude' and 'longitude' must have the same number of elements",
-               "Parameter 'latitude' and 'longitude' must have the same number of elements"
-             ]
+    response = json_response(conn, 200)
+
+    assert Enum.any?(
+             response,
+             &Map.equal?(&1, %{
+               "error" =>
+                 "Parameter 'latitude' and 'longitude' must have the same number of elements",
+               "location" => "São Paulo"
+             })
+           )
+
+    assert Enum.any?(
+             response,
+             &Map.equal?(&1, %{
+               "error" =>
+                 "Parameter 'latitude' and 'longitude' must have the same number of elements",
+               "location" => "Belo Horizonte"
+             })
+           )
+
+    assert Enum.any?(
+             response,
+             &Map.equal?(&1, %{
+               "error" =>
+                 "Parameter 'latitude' and 'longitude' must have the same number of elements",
+               "location" => "Curitiba"
+             })
+           )
 
     assert_receive {^ref, :temp}
 
@@ -72,7 +94,8 @@ defmodule WeatherWeb.WeatherControllerTest do
 
     assert Enum.any?(
              response,
-             &(&1 === "Parameter 'latitude' and 'longitude' must have the same number of elements")
+             &(Map.get(&1, "error") ===
+                 "Parameter 'latitude' and 'longitude' must have the same number of elements")
            )
 
     assert Enum.any?(response, fn
@@ -98,11 +121,34 @@ defmodule WeatherWeb.WeatherControllerTest do
 
     conn = get(conn, "/api/weather")
 
-    assert json_response(conn, 200) == [
-             "Request failed with status Latitude must be in range of -90 to 90°. Given: -2e+12.",
-             "Request failed with status Latitude must be in range of -90 to 90°. Given: -2e+12.",
-             "Request failed with status Latitude must be in range of -90 to 90°. Given: -2e+12."
-           ]
+    response = json_response(conn, 200)
+
+    assert Enum.any?(
+             response,
+             &Map.equal?(&1, %{
+               "error" =>
+                 "Request failed with status Latitude must be in range of -90 to 90°. Given: -2e+12.",
+               "location" => "São Paulo"
+             })
+           )
+
+    assert Enum.any?(
+             response,
+             &Map.equal?(&1, %{
+               "error" =>
+                 "Request failed with status Latitude must be in range of -90 to 90°. Given: -2e+12.",
+               "location" => "Belo Horizonte"
+             })
+           )
+
+    assert Enum.any?(
+             response,
+             &Map.equal?(&1, %{
+               "error" =>
+                 "Request failed with status Latitude must be in range of -90 to 90°. Given: -2e+12.",
+               "location" => "Curitiba"
+             })
+           )
 
     assert_receive {^ref, :temp}
 

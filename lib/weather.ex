@@ -8,6 +8,7 @@ defmodule Weather do
   """
 
   alias Weather.Orchestrator
+  require Logger
 
   @locations [
     %{state: "São Paulo", latitude: -23.55, longitude: -46.63},
@@ -25,11 +26,16 @@ defmodule Weather do
     - `{:ok, results}`: A tuple containing the weather data for all locations.
     - `{:error, reason}`: A tuple containing the error reason if the request fails.
   """
-  @spec call() :: {:ok, list()} | {:error, any()}
-  def call do
-    case Orchestrator.start_request(@locations) do
-      {:ok, results} -> {:ok, results}
-      {:error, reason} -> {:error, reason}
-    end
+  @spec call(keyword()) :: {:ok, list()} | {:error, any()}
+  def call(opts \\ []) do
+    Logger.info("Starting weather data request")
+    start_time = System.monotonic_time(:millisecond)
+
+    result = Orchestrator.start_request(@locations, opts)
+
+    end_time = System.monotonic_time(:millisecond)
+    Logger.info("Weather data request completed in #{end_time - start_time}ms")
+
+    result
   end
 end

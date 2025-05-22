@@ -7,23 +7,28 @@ defmodule Weather.Worker do
   alias Weather.Storage
   alias Weather.HttpClientImpl, as: HttpClientImpl
 
+  require Logger
+
+  @max_retries 3
+  @retry_delay 1000
+
   @doc """
-  Performs a weather request for a given process ID (`pid`) and location.
+  Performs a weather request for a given request ID and location.
 
   ## Parameters
-    - `pid`: The process ID to associate the request with.
+    - `request_id`: The unique ID of the request.
     - `location`: A map containing location details (e.g., latitude, longitude).
 
   ## Returns
     - `:ok` after updating the storage with the result.
   """
-  @spec perform_request(pid(), map()) :: :ok
-  def perform_request(pid, location) do
+  @spec perform_request(String.t(), map()) :: :ok
+  def perform_request(request_id, location) do
     result =
       add_location_info(location)
-      |> call_api
+      |> call_api_with_retry(0)
 
-    Storage.update_request(pid, result)
+    Storage.update_request(request_id, result)
   end
 
   @spec add_location_info(map()) :: map()
@@ -33,17 +38,31 @@ defmodule Weather.Worker do
     |> Map.put(:timezone, "America/Sao_Paulo")
   end
 
-  @spec call_api(map()) :: map() | String.t()
-  defp call_api(location) do
-    client().call(location)
-    |> case do
-      {:ok, temperatures} ->
-        calculate_mean_temperature(temperatures)
-        |> then(&Map.new([{location.state, "#{&1}°C"}]))
+  @spec call_api_with_retry(map(), non_neg_integer()) :: map()
+  defp call_api_with_retry(location, retry_count) when retry_count < @max_retries do
+    try do
+      client().call(location)
+      |> case do
+        {:ok, temperatures} ->
+          calculate_mean_temperature(temperatures)
+          |> then(&Map.new([{location.state, "#{&1}°C"}]))
 
-      {:error, reason} ->
-        reason
+        {:error, reason} ->
+          %{error: reason, location: location.state}
+      end
+    rescue
+      e ->
+        Logger.error(
+          "Exception in API call for #{location.state}: #{inspect(e)}. Retry #{retry_count + 1}/#{@max_retries}"
+        )
+
+        Process.sleep(@retry_delay)
+        call_api_with_retry(location, retry_count + 1)
     end
+  end
+
+  defp call_api_with_retry(location, _retry_count) do
+    %{error: "Max retries exceeded", location: location.state}
   end
 
   @spec calculate_mean_temperature([float()]) :: number()

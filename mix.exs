@@ -41,7 +41,8 @@ defmodule Weather.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:tesla, "~> 1.14"},
-      {:mox, "~> 1.0", only: :test}
+      {:mox, "~> 1.0", only: :test},
+      {:uuid, "~>1.1"}
     ]
   end
 
