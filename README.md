@@ -2,6 +2,34 @@
 
 A Phoenix-based API service for fetching weather data from predefined or custom locations. This lightweight API does not use a database and focuses purely on serving weather data.
 
+## Running the Application
+
+Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/Xarlie-Xarlie/weather-api.git
+cd weather_api
+mix deps.get
+```
+
+Start the Phoenix server:
+
+```bash
+mix phx.server
+```
+
+The server will be accessible at http://localhost:4000.
+
+## Running Tests
+
+The project includes a comprehensive test suite. Run all tests with:
+
+```bash
+mix test
+```
+
+The tests use mocking to avoid real API calls, ensuring they run quickly and reliably.
+
 ## API Endpoints
 
 The application exposes the following REST API endpoints:
@@ -125,34 +153,6 @@ mix weather.fetch --locations=test/fixtures/locations.json
 # Pretty-print the JSON output
 mix weather.fetch --pretty
 ```
-
-## Running the Application
-
-Clone the repository and install dependencies:
-
-```bash
-git clone https://github.com/Xarlie-Xarlie/weather-api.git
-cd weather_api
-mix deps.get
-```
-
-Start the Phoenix server:
-
-```bash
-mix phx.server
-```
-
-The server will be accessible at http://localhost:4000.
-
-## Running Tests
-
-The project includes a comprehensive test suite. Run all tests with:
-
-```bash
-mix test
-```
-
-The tests use mocking to avoid real API calls, ensuring they run quickly and reliably.
 
 ## Development
 
