@@ -37,7 +37,6 @@ defmodule Weather.OrchestratorTest do
       assert Enum.any?(results, fn result -> result == %{"Curitiba" => "18.0°C"} end)
     end
 
-    @tag :only
     test "handles worker errors" do
       Mox.allow(ClientMock, self(), Process.whereis(Weather.TaskSupervisor))
 
