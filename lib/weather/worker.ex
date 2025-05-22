@@ -45,15 +45,15 @@ defmodule Weather.Worker do
       |> case do
         {:ok, temperatures} ->
           calculate_mean_temperature(temperatures)
-          |> then(&Map.new([{location.state, "#{&1}°C"}]))
+          |> then(&Map.new([{location.location, "#{&1}°C"}]))
 
         {:error, reason} ->
-          %{error: reason, location: location.state}
+          %{error: reason, location: location.location}
       end
     rescue
       e ->
         Logger.error(
-          "Exception in API call for #{location.state}: #{inspect(e)}. Retry #{retry_count + 1}/#{@max_retries}"
+          "Exception in API call for #{location.location}: #{inspect(e)}. Retry #{retry_count + 1}/#{@max_retries}"
         )
 
         Process.sleep(@retry_delay)
@@ -62,7 +62,7 @@ defmodule Weather.Worker do
   end
 
   defp call_api_with_retry(location, _retry_count) do
-    %{error: "Max retries exceeded", location: location.state}
+    %{error: "Max retries exceeded", location: location.location}
   end
 
   @spec calculate_mean_temperature([float()]) :: number()

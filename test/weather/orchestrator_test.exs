@@ -16,7 +16,7 @@ defmodule Weather.OrchestratorTest do
 
       ClientMock
       |> expect(:call, 3, fn params ->
-        case params.state do
+        case params.location do
           "São Paulo" -> {:ok, [25.0, 25.0, 25.0, 25.0, 25.0, 25.0]}
           "Belo Horizonte" -> {:ok, [22.0, 22.0, 22.0, 22.0, 22.0, 22.0]}
           "Curitiba" -> {:ok, [18.0, 18.0, 18.0, 18.0, 18.0, 18.0]}
@@ -24,9 +24,9 @@ defmodule Weather.OrchestratorTest do
       end)
 
       locations = [
-        %{state: "São Paulo", latitude: -23.55, longitude: -46.63},
-        %{state: "Belo Horizonte", latitude: -19.92, longitude: -43.94},
-        %{state: "Curitiba", latitude: -25.43, longitude: -49.27}
+        %{location: "São Paulo", latitude: -23.55, longitude: -46.63},
+        %{location: "Belo Horizonte", latitude: -19.92, longitude: -43.94},
+        %{location: "Curitiba", latitude: -25.43, longitude: -49.27}
       ]
 
       {:ok, results} = Orchestrator.start_request(locations)
@@ -43,7 +43,7 @@ defmodule Weather.OrchestratorTest do
 
       ClientMock
       |> expect(:call, 5, fn params ->
-        case params.state do
+        case params.location do
           "São Paulo" -> {:ok, [25.0, 25.0, 25.0, 25.0, 25.0, 25.0]}
           "Belo Horizonte" -> raise "API unavailable"
           "Curitiba" -> {:ok, [18.0, 18.0, 18.0, 18.0, 18.0, 18.0]}
@@ -51,9 +51,9 @@ defmodule Weather.OrchestratorTest do
       end)
 
       locations = [
-        %{state: "São Paulo", latitude: -23.55, longitude: -46.63},
-        %{state: "Belo Horizonte", latitude: -19.92, longitude: -43.94},
-        %{state: "Curitiba", latitude: -25.43, longitude: -49.27}
+        %{location: "São Paulo", latitude: -23.55, longitude: -46.63},
+        %{location: "Belo Horizonte", latitude: -19.92, longitude: -43.94},
+        %{location: "Curitiba", latitude: -25.43, longitude: -49.27}
       ]
 
       {:ok, results} = Orchestrator.start_request(locations)
@@ -70,7 +70,7 @@ defmodule Weather.OrchestratorTest do
 
     test "handles timeout" do
       locations = [
-        %{state: "São Paulo", latitude: -23.55, longitude: -46.63}
+        %{location: "São Paulo", latitude: -23.55, longitude: -46.63}
       ]
 
       ClientMock

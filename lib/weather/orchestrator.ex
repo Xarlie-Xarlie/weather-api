@@ -29,8 +29,8 @@ defmodule Weather.Orchestrator do
 
   ## Example
       locations = [
-        %{state: "São Paulo", latitude: -23.55, longitude: -46.63},
-        %{state: "Belo Horizonte", latitude: -19.92, longitude: -43.94}
+        %{location: "São Paulo", latitude: -23.55, longitude: -46.63},
+        %{location: "Belo Horizonte", latitude: -19.92, longitude: -43.94}
       ]
 
       Weather.Orchestrator.start_request(locations)
@@ -65,11 +65,11 @@ defmodule Weather.Orchestrator do
           Worker.perform_request(request_id, location)
         rescue
           e ->
-            Logger.error("Worker crashed for #{location.state}: #{inspect(e)}")
+            Logger.error("Worker crashed for #{location.location}: #{inspect(e)}")
 
             Storage.update_request(request_id, %{
               error: "Worker crashed",
-              location: location.state
+              location: location.location
             })
         end
       end)

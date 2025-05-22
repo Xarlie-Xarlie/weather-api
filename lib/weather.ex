@@ -11,9 +11,9 @@ defmodule Weather do
   require Logger
 
   @locations [
-    %{state: "São Paulo", latitude: -23.55, longitude: -46.63},
-    %{state: "Belo Horizonte", latitude: -19.92, longitude: -43.94},
-    %{state: "Curitiba", latitude: -25.43, longitude: -49.27}
+    %{location: "São Paulo", latitude: -23.55, longitude: -46.63},
+    %{location: "Belo Horizonte", latitude: -19.92, longitude: -43.94},
+    %{location: "Curitiba", latitude: -25.43, longitude: -49.27}
   ]
 
   @doc """

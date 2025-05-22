@@ -14,7 +14,7 @@ defmodule Weather.WorkerTest do
     test "processes location data and updates storage with successful result" do
       ClientMock
       |> expect(:call, fn params ->
-        assert params.state == "São Paulo"
+        assert params.location == "São Paulo"
         assert params.daily == "temperature_2m_max"
         assert params.timezone == "America/Sao_Paulo"
         assert params.latitude == -23.55
@@ -26,7 +26,7 @@ defmodule Weather.WorkerTest do
       {:ok, request_id} = Weather.Storage.init_request(self(), 1)
 
       location = %{
-        state: "São Paulo",
+        location: "São Paulo",
         latitude: -23.55,
         longitude: -46.63
       }
@@ -46,7 +46,7 @@ defmodule Weather.WorkerTest do
       {:ok, request_id} = Weather.Storage.init_request(self(), 1)
 
       location = %{
-        state: "São Paulo",
+        location: "São Paulo",
         latitude: -23.55,
         longitude: -46.63
       }
@@ -70,7 +70,7 @@ defmodule Weather.WorkerTest do
       {:ok, request_id} = Weather.Storage.init_request(self(), 1)
 
       location = %{
-        state: "São Paulo",
+        location: "São Paulo",
         latitude: -23.55,
         longitude: -46.63
       }
@@ -88,7 +88,7 @@ defmodule Weather.WorkerTest do
       {:ok, request_id} = Weather.Storage.init_request(self(), 1)
 
       location = %{
-        state: "São Paulo",
+        location: "São Paulo",
         latitude: -23.55,
         longitude: -46.63
       }
