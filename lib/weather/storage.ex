@@ -116,7 +116,6 @@ defmodule Weather.Storage do
 
         new_state =
           if updated_request_data.completed_requests == total do
-            # Notify the orchestrator when all requests are complete
             send(pid, {:results_ready, request_id, updated_request_data.data})
             Map.delete(state, request_id)
           else
