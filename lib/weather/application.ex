@@ -12,7 +12,7 @@ defmodule Weather.Application do
       {DNSCluster, query: Application.get_env(:weather, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Weather.PubSub},
       # Start a worker by calling: Weather.Worker.start_link(arg)
-      # {Weather.Worker, arg},
+      {Weather.Storage, nil},
       # Start to serve requests, typically the last entry
       WeatherWeb.Endpoint
     ]
