@@ -20,5 +20,5 @@ defmodule WeatherWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :weather
+  use Gettext, backend: WeatherWeb.Gettext
 end
